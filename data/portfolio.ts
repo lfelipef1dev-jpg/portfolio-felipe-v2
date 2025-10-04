@@ -55,7 +55,8 @@ export const projects: Project[] = [
     description: 'Landing page moderna e responsiva com animações CSS suaves. Hero section impactante, seção de features com cards animados e design totalmente responsivo.',
     image: '/projects/landing.jpg',
     tags: ['HTML5', 'CSS3', 'JavaScript', 'Responsive'],
-    githubUrl: 'https://github.com/seu-usuario/landing-page',
+    githubUrl: 'https://github.com/lfelipef1dev-jpg/portfolio-felipe-v2',
+    liveUrl: '/projects/landing-page/index.html',
     featured: true,
   },
   {
@@ -64,7 +65,8 @@ export const projects: Project[] = [
     description: 'Aplicativo web para cálculo de Índice de Massa Corporal com interface intuitiva, validação de dados e classificação automática. Design moderno com gradientes.',
     image: '/projects/imc.jpg',
     tags: ['HTML5', 'CSS3', 'JavaScript', 'UX/UI'],
-    githubUrl: 'https://github.com/seu-usuario/calculadora-imc',
+    githubUrl: 'https://github.com/lfelipef1dev-jpg/portfolio-felipe-v2',
+    liveUrl: '/projects/calculadora-imc/index.html',
     featured: true,
   },
   {
@@ -73,7 +75,8 @@ export const projects: Project[] = [
     description: 'Gerenciador de tarefas completo com LocalStorage, filtros (todas/pendentes/concluídas), estatísticas em tempo real e interface responsiva com animações.',
     image: '/projects/todo.jpg',
     tags: ['HTML5', 'CSS3', 'JavaScript', 'LocalStorage'],
-    githubUrl: 'https://github.com/seu-usuario/todo-list',
+    githubUrl: 'https://github.com/lfelipef1dev-jpg/portfolio-felipe-v2',
+    liveUrl: '/projects/todo-list/index.html',
     featured: true,
   },
   {
@@ -82,7 +85,7 @@ export const projects: Project[] = [
     description: 'Recriação da interface do Spotify com sidebar, player de música, playlists e design responsivo. Foco em UI/UX e animações suaves.',
     image: '/projects/spotify.jpg',
     tags: ['HTML', 'CSS', 'JavaScript', 'Flexbox'],
-    githubUrl: 'https://github.com/seu-usuario/spotify-clone',
+    githubUrl: 'https://github.com/lfelipef1dev-jpg/portfolio-felipe-v2',
     featured: false,
   },
   {
@@ -91,7 +94,7 @@ export const projects: Project[] = [
     description: 'Aplicativo de previsão do tempo usando API OpenWeather. Mostra temperatura atual, condições climáticas e previsão para os próximos dias.',
     image: '/projects/weather.jpg',
     tags: ['JavaScript', 'API', 'CSS', 'Fetch'],
-    githubUrl: 'https://github.com/seu-usuario/weather-app',
+    githubUrl: 'https://github.com/lfelipef1dev-jpg/portfolio-felipe-v2',
     featured: false,
   },
   {
@@ -100,7 +103,8 @@ export const projects: Project[] = [
     description: 'Site de portfólio pessoal com Next.js, TypeScript e Tailwind CSS. Design moderno, seções animadas e totalmente customizável.',
     image: '/projects/portfolio.jpg',
     tags: ['Next.js', 'TypeScript', 'Tailwind', 'React'],
-    githubUrl: 'https://github.com/seu-usuario/portfolio',
+    githubUrl: 'https://github.com/lfelipef1dev-jpg/portfolio-felipe-v2',
+    liveUrl: 'https://github.com/lfelipef1dev-jpg/portfolio-felipe-v2',
     featured: false,
   },
 ];
