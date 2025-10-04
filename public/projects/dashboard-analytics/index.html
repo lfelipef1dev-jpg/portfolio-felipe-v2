@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Analytics Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: #1e293b;
+            padding: 1.5rem 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-change {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .positive {
+            color: #10b981;
+        }
+
+        .negative {
+            color: #ef4444;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: #e2e8f0;
+        }
+
+        /* Table */
+        .table-container {
+            background: #1e293b;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #334155;
+            padding: 1rem;
+            text-align: left;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        tr:hover {
+            background: #334155;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-pending {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .status-inactive {
+            background: #ef4444;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Dashboard Analytics Pro</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" onclick="refreshData()">🔄 Atualizar</button>
+                <button class="btn btn-primary" onclick="exportData()">📥 Exportar</button>
+            </div>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value" id="totalUsers">0</div>
+                <div class="stat-label">Usuários Ativos</div>
+                <div class="stat-change positive">↑ +12.5% este mês</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value" id="revenue">R$ 0</div>
+                <div class="stat-label">Receita Total</div>
+                <div class="stat-change positive">↑ +8.2% este mês</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">📦</div>
+                <div class="stat-value" id="orders">0</div>
+                <div class="stat-label">Pedidos</div>
+                <div class="stat-change negative">↓ -3.1% este mês</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value" id="rating">0</div>
+                <div class="stat-label">Avaliação Média</div>
+                <div class="stat-change positive">↑ +0.3 este mês</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3 class="chart-title">📈 Vendas dos Últimos 30 Dias</h3>
+                <canvas id="salesChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h3 class="chart-title">🎯 Visitantes por Dispositivo</h3>
+                <canvas id="deviceChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Activity Table -->
+        <div class="table-container">
+            <h3 class="chart-title">📋 Atividades Recentes</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Produto</th>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+                <tbody id="activityTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Animated counters
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            const range = end - start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / range));
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (id === 'revenue') {
+                    obj.textContent = `R$ ${current.toLocaleString('pt-BR')}`;
+                } else if (id === 'rating') {
+                    obj.textContent = (current / 10).toFixed(1);
+                } else {
+                    obj.textContent = current.toLocaleString('pt-BR');
+                }
+                
+                if (current === end) {
+                    clearInterval(timer);
+                }
+            }, stepTime);
+        }
+
+        // Initialize stats
+        animateValue('totalUsers', 0, 15847, 2000);
+        animateValue('revenue', 0, 284500, 2000);
+        animateValue('orders', 0, 3842, 2000);
+        animateValue('rating', 0, 47, 2000);
+
+        // Sales Chart
+        const salesCtx = document.getElementById('salesChart').getContext('2d');
+        const salesChart = new Chart(salesCtx, {
+            type: 'line',
+            data: {
+                labels: ['Dia 1', 'Dia 7', 'Dia 14', 'Dia 21', 'Dia 28'],
+                datasets: [{
+                    label: 'Vendas (R$)',
+                    data: [12000, 19000, 15000, 25000, 32000],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e2e8f0' }
+                    }
+                },
+                scales: {
+                    y: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#334155' }
+                    },
+                    x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: '#334155' }
+                    }
+                }
+            }
+        });
+
+        // Device Chart
+        const deviceCtx = document.getElementById('deviceChart').getContext('2d');
+        const deviceChart = new Chart(deviceCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Desktop', 'Mobile', 'Tablet'],
+                datasets: [{
+                    data: [55, 35, 10],
+                    backgroundColor: ['#667eea', '#764ba2', '#f59e0b']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: { color: '#e2e8f0' }
+                    }
+                }
+            }
+        });
+
+        // Generate activity data
+        const activities = [
+            { id: '#1234', client: 'João Silva', product: 'MacBook Pro', value: 'R$ 12.500', status: 'active', date: '04/10/2024' },
+            { id: '#1235', client: 'Maria Santos', product: 'iPhone 15', value: 'R$ 7.200', status: 'pending', date: '04/10/2024' },
+            { id: '#1236', client: 'Pedro Costa', product: 'AirPods Pro', value: 'R$ 2.400', status: 'active', date: '03/10/2024' },
+            { id: '#1237', client: 'Ana Lima', product: 'iPad Air', value: 'R$ 5.800', status: 'active', date: '03/10/2024' },
+            { id: '#1238', client: 'Carlos Dias', product: 'Apple Watch', value: 'R$ 3.200', status: 'inactive', date: '02/10/2024' },
+        ];
+
+        const tableBody = document.getElementById('activityTable');
+        activities.forEach(activity => {
+            const statusClass = activity.status === 'active' ? 'status-active' : 
+                              activity.status === 'pending' ? 'status-pending' : 'status-inactive';
+            const statusText = activity.status === 'active' ? 'Ativo' : 
+                             activity.status === 'pending' ? 'Pendente' : 'Inativo';
+            
+            tableBody.innerHTML += `
+                <tr>
+                    <td>${activity.id}</td>
+                    <td>${activity.client}</td>
+                    <td>${activity.product}</td>
+                    <td>${activity.value}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>${activity.date}</td>
+                </tr>
+            `;
+        });
+
+        function refreshData() {
+            alert('🔄 Dados atualizados com sucesso!');
+            location.reload();
+        }
+
+        function exportData() {
+            alert('📥 Exportação iniciada! Os dados serão baixados em breve.');
+        }
+    </script>
+</body>
+</html>
+
