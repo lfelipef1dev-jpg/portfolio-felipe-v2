@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de IMC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result h2 {
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+        }
+
+        .result p {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .result.baixo { background: #e3f2fd; color: #1976d2; }
+        .result.normal { background: #e8f5e9; color: #388e3c; }
+        .result.sobrepeso { background: #fff3e0; color: #f57c00; }
+        .result.obeso { background: #ffebee; color: #d32f2f; }
+
+        .info {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 2rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏃‍♂️ Calculadora de IMC</h1>
+        
+        <form id="imcForm">
+            <div class="input-group">
+                <label for="peso">Peso (kg)</label>
+                <input type="number" id="peso" placeholder="Ex: 70" step="0.1" required>
+            </div>
+
+            <div class="input-group">
+                <label for="altura">Altura (m)</label>
+                <input type="number" id="altura" placeholder="Ex: 1.75" step="0.01" required>
+            </div>
+
+            <button type="submit">Calcular IMC</button>
+        </form>
+
+        <div class="result" id="resultado">
+            <h2 id="imcValor"></h2>
+            <p id="imcCategoria"></p>
+        </div>
+
+        <div class="info">
+            <strong>Classificação IMC:</strong><br>
+            • Abaixo de 18.5: Abaixo do peso<br>
+            • 18.5 - 24.9: Peso normal<br>
+            • 25.0 - 29.9: Sobrepeso<br>
+            • Acima de 30.0: Obesidade
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('imcForm');
+        const resultado = document.getElementById('resultado');
+        const imcValor = document.getElementById('imcValor');
+        const imcCategoria = document.getElementById('imcCategoria');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const peso = parseFloat(document.getElementById('peso').value);
+            const altura = parseFloat(document.getElementById('altura').value);
+
+            if (peso > 0 && altura > 0) {
+                const imc = (peso / (altura * altura)).toFixed(1);
+                
+                imcValor.textContent = `IMC: ${imc}`;
+                
+                // Remove classes anteriores
+                resultado.className = 'result show';
+
+                if (imc < 18.5) {
+                    resultado.classList.add('baixo');
+                    imcCategoria.textContent = 'Abaixo do peso';
+                } else if (imc < 25) {
+                    resultado.classList.add('normal');
+                    imcCategoria.textContent = 'Peso normal';
+                } else if (imc < 30) {
+                    resultado.classList.add('sobrepeso');
+                    imcCategoria.textContent = 'Sobrepeso';
+                } else {
+                    resultado.classList.add('obeso');
+                    imcCategoria.textContent = 'Obesidade';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
